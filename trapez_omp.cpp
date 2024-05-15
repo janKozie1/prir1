@@ -61,6 +61,8 @@ int main(int argc, char* argv[]) {
     if (getline(file, line)) { steps = std::stoi(line); } else { std::cerr << "Unparsable config file" << std::endl; return 1; }
   }
 
+  std::cout << "Rank: " << rank << std::endl;
+
   MPI_Bcast(&a, 1, MPI_INT, 0, MPI_COMM_WORLD);
   MPI_Bcast(&b, 1, MPI_INT, 0, MPI_COMM_WORLD);
   MPI_Bcast(&steps, 1, MPI_INT, 0, MPI_COMM_WORLD);
