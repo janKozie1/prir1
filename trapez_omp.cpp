@@ -38,18 +38,17 @@ long double trapezoidalRule(long double a, long double b, int n, int num_of_thre
 int main(int argc, char* argv[]) {
   MPI_Init(&argc, &argv);
 
-  int rank, size;
+  int rank, num_of_processes;
   MPI_Comm_rank(MPI_COMM_WORLD, &rank);
-  MPI_Comm_size(MPI_COMM_WORLD, &size);
+  MPI_Comm_size(MPI_COMM_WORLD, &num_of_processes);
 
-  if (argc != 3) {
-    std::cout << "Usage: " << argv[0] << " <number_of_threads> <number_of_processes>" << std::endl;
+  if (argc != 2) {
+    std::cout << "Usage: " << argv[0] << " <number_of_threads>" << std::endl;
     MPI_Finalize();
     return 1;
   }
 
   int num_of_threads = std::atoi(argv[1]);
-  int num_of_processes = std::atoi(argv[2]);
 
   std::ifstream file("constants.txt");
   int a, b, steps;
@@ -67,7 +66,7 @@ int main(int argc, char* argv[]) {
   MPI_Bcast(&b, 1, MPI_INT, 0, MPI_COMM_WORLD);
   MPI_Bcast(&steps, 1, MPI_INT, 0, MPI_COMM_WORLD);
 
-  int local_n = steps / size;
+  int local_n = steps / num_of_processes;
   long double local_a = a + rank * local_n * ((b - a) / (double)steps);
   long double local_b = local_a + local_n * ((b - a) / (double)steps);
 
@@ -89,5 +88,6 @@ int main(int argc, char* argv[]) {
     addLineToFile("./results_omp.txt", std::to_string(a) + "," + std::to_string(b) + "," + std::to_string(steps) + "," + std::to_string(duration.count()) + "," + std::to_string(num_of_threads) + "," + std::to_string(num_of_processes));
   }
 
+  MPI_Finalize();
   return 0;
 }
