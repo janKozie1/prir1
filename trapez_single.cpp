@@ -3,15 +3,10 @@
 #include <fstream>
 #include <cmath>
 
-void addLineToFile(const std::string& filename, const std::string& lineToAdd) {
+void saveToFile(const std::string& filename, const std::string& lineToAdd) {
   std::ofstream file(filename, std::ios::app);
-
-  if (file.is_open()) {
-      file << lineToAdd << std::endl;
-      file.close();
-  } else {
-      std::cerr << "Unable to open file: " << filename << std::endl;
-  }
+  file << lineToAdd << std::endl;
+  file.close();
 }
 
 long double f(long double x) {
@@ -49,7 +44,7 @@ int main(int argc, char* argv[]) {
   std::cout << "Estimated value of the integral using a trapezoidal rule: " << integral_estimate << std::endl;
   std::cout << "Time taken: " << duration.count() << " ms" << std::endl;
 
-  addLineToFile("./results_single.txt", std::to_string(a) + "," + std::to_string(b) + "," + std::to_string(steps) + "," + std::to_string(duration.count()));
+  saveToFile("./results_single.txt", std::to_string(a) + "," + std::to_string(b) + "," + std::to_string(steps) + "," + std::to_string(duration.count()));
 
   return 0;
 }
